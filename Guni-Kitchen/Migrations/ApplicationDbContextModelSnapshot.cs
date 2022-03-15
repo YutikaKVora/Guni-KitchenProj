@@ -64,6 +64,9 @@ namespace Guni_Kitchen.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("smalldatetime");
+
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(60)
@@ -74,6 +77,12 @@ namespace Guni_Kitchen.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsAdminUser")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -133,24 +142,54 @@ namespace Guni_Kitchen.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<short>("CategoryId")
+                        .HasColumnType("smallint");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageURL")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ProductCategory")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Price")
+                        .HasPrecision(6, 2)
+                        .HasColumnType("decimal(6,2)");
 
                     b.Property<string>("ProductName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Size")
+                        .IsRequired()
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("UnitOfMeasure")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ProductId");
 
-                    b.ToTable("Product");
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Guni_Kitchen.Models.ProductCategory", b =>
+                {
+                    b.Property<short>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -254,6 +293,17 @@ namespace Guni_Kitchen.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Guni_Kitchen.Models.Product", b =>
+                {
+                    b.HasOne("Guni_Kitchen.Models.ProductCategory", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Guni_Kitchen.Models.MyIdentityRole", null)
@@ -303,6 +353,11 @@ namespace Guni_Kitchen.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Guni_Kitchen.Models.ProductCategory", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

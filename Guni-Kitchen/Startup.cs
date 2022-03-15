@@ -20,29 +20,39 @@ namespace Guni_Kitchen
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
-            Configuration = configuration;
+            _configuration = configuration;
+            _hostEnvironment = hostEnvironment;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration _configuration { get; }
         public readonly IHostEnvironment _hostEnvironment;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             //string connectionStringName = _hostEnvironment.IsDevelopment() ? "DefaultConnection" : "AzureConnection";
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-            {
-                services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            }
-            else
-            {
-                services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureConnection")));
-            }
-            /*services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString(connectionStringName)));*/
+            //if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            //{
+            //    services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //}
+            //else
+            //{
+            //    services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureConnection")));
+            //}
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")));
+
+            string connectionStringName
+                = _hostEnvironment.IsDevelopment() ? "DefaultConnection" : "AzureConnection";
+
+            services
+                .AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlServer(
+                        _configuration.GetConnectionString(connectionStringName)));
+
             services.AddDatabaseDeveloperPageExceptionFilter();
             services
                 .AddIdentity<MyIdentityUser, MyIdentityRole>(options =>
@@ -110,9 +120,6 @@ namespace Guni_Kitchen
                 endpoints.MapRazorPages();
             });
 
-            //Seed Database
-
-            ApplicationDbInitializer.Seed(app);
         }
     }
 }

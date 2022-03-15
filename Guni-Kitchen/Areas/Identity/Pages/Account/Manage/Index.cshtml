@@ -1,4 +1,5 @@
 ﻿@page
+@using Guni_Kitchen.Models.Enums
 @model IndexModel
 @{
     ViewData["Title"] = "Profile";
@@ -20,6 +21,36 @@
                 <input asp-for="Input.PhoneNumber" class="form-control" />
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="Input.DisplayName"></label>
+                <input asp-for="Input.DisplayName" class="form-control" />
+                <span asp-validation-for="Input.DisplayName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.DateOfBirth"></label>
+                <input asp-for="Input.DateOfBirth" class="form-control" type="date" />
+                <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.IsAdminUser"></label>
+                <input asp-for="Input.IsAdminUser" class="form-control" type="date" />
+                <span asp-validation-for="Input.IsAdminUser" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for = "Input.Gender" class="control-label"></label>
+                <br />
+                @foreach(var item in Enum.GetValues(typeof(MyIdentityGenders)).OfType<MyIdentityGenders>())
+                {
+                    <input type="radio" 
+                        asp-for="Input.Gender" value = "@((int)item)"
+                        checked="@(item ==Model?.Input.Gender)" />
+                    <label asp-for="Input.Gender">@item </label>
+                }
+                <span asp-validation-for="Input.Gender" class="text-danger" style="display: block"></span>
+            </div>
+
             <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
         </form>
     </div>

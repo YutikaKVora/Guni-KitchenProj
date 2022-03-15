@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "Guni-KitchenWeb",
+      "defaultValue": "Guni-Kitchen20220314141644",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }

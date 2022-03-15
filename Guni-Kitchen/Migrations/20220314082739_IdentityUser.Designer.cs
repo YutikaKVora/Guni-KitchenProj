@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Guni_Kitchen.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220309055554_Products")]
-    partial class Products
+    [Migration("20220314082739_IdentityUser")]
+    partial class IdentityUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,6 +66,9 @@ namespace Guni_Kitchen.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("smalldatetime");
+
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(60)
@@ -76,6 +79,12 @@ namespace Guni_Kitchen.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsAdminUser")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -138,7 +147,7 @@ namespace Guni_Kitchen.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageURL")
+                    b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
