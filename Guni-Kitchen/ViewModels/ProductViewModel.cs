@@ -1,10 +1,12 @@
-﻿using Guni_Kitchen.Models.Enums;
+﻿using Guni_Kitchen.Models;
+using Guni_Kitchen.Models.Enums;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Guni_Kitchen.Models
+namespace Guni_Kitchen.ViewModels
 {
-    public class Product
+    public class ProductViewModel
     {
         [Key]
         [Display(Name = "Product ID")]
@@ -17,23 +19,21 @@ namespace Guni_Kitchen.Models
 
         [Display(Name = "Price per Unit")]
         [Required]
-        [Range(0.0, 500.0, ErrorMessage ="{0} has to be between Rs. {1} and Rs. {2}")]
+        [Range(0.0, 500.0, ErrorMessage = "{0} has to be between Rs. {1} and Rs. {2}")]
         public decimal Price { get; set; }
 
         [Required]
-        [Display(Name= "Unit Of Measure")]
+        [Display(Name = "Unit Of Measure")]
         public string UnitOfMeasure { get; set; }
 
+        [Display(Name = "Product Image")]
+        public IFormFile Photo { get; set; }
+
         [Display(Name = "Size")]
-        [Column(TypeName="varchar(20)")]
+        [Column(TypeName = "varchar(20)")]
         public ProductSizes Size { get; set; }
 
 
-        [StringLength(150)]
-        public string ProductImageFileUrl { get; set; }
-
-        [StringLength(60)]
-        public string ProductImageContentType { get; set; }
         #region Navigational Properties to the Category Model
 
         [ForeignKey(nameof(Product.Category))]

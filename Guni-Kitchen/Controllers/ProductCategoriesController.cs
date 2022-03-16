@@ -19,13 +19,13 @@ namespace Guni_Kitchen.Controllers
             _context = context;
         }
 
-        // GET: ProductCategories
+        // GET: Manage/Categories
         public async Task<IActionResult> Index()
         {
             return View(await _context.Category.ToListAsync());
         }
 
-        // GET: ProductCategories/Details/5
+        // GET: Manage/Categories/Details/5
         public async Task<IActionResult> Details(short? id)
         {
             if (id == null)
@@ -33,39 +33,47 @@ namespace Guni_Kitchen.Controllers
                 return NotFound();
             }
 
-            var productCategory = await _context.Category
+            var category = await _context.Category
                 .FirstOrDefaultAsync(m => m.CategoryId == id);
-            if (productCategory == null)
+            if (category == null)
             {
                 return NotFound();
             }
 
-            return View(productCategory);
+            return View(category);
         }
 
-        // GET: ProductCategories/Create
+        // GET: Manage/Categories/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: ProductCategories/Create
+        // POST: Manage/Categories/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoryId,CategoryName,CreatedAt")] ProductCategory productCategory)
+        public async Task<IActionResult> Create([Bind("CategoryId,CategoryName,CreatedAt")] ProductCategory category)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(productCategory);
+
+                bool found = _context.Category.Any(e => e.CategoryName == category.CategoryName);
+                if (found)
+                {
+                    ModelState.AddModelError("CategoryName", "Duplicate Category Found!");
+                    return View(category);
+                }
+
+                _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(productCategory);
+            return View(category);
         }
 
-        // GET: ProductCategories/Edit/5
+        // GET: Manage/Categories/Edit/5
         public async Task<IActionResult> Edit(short? id)
         {
             if (id == null)
@@ -73,36 +81,44 @@ namespace Guni_Kitchen.Controllers
                 return NotFound();
             }
 
-            var productCategory = await _context.Category.FindAsync(id);
-            if (productCategory == null)
+            var category = await _context.Category.FindAsync(id);
+            if (category == null)
             {
                 return NotFound();
             }
-            return View(productCategory);
+            return View(category);
         }
 
-        // POST: ProductCategories/Edit/5
+        // POST: Manage/Categories/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(short id, [Bind("CategoryId,CategoryName,CreatedAt")] ProductCategory productCategory)
+        public async Task<IActionResult> Edit(short id, [Bind("CategoryId,CategoryName,CreatedAt")] ProductCategory category)
         {
-            if (id != productCategory.CategoryId)
+            if (id != category.CategoryId)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
+                bool found = _context.Category.Any(e =>
+                    e.CategoryId != category.CategoryId && e.CategoryName == category.CategoryName);
+                if (found)
+                {
+                    ModelState.AddModelError("CategoryName", "Duplicate Category Found!");
+                    return View(category);
+                }
+
                 try
                 {
-                    _context.Update(productCategory);
+                    _context.Update(category);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductCategoryExists(productCategory.CategoryId))
+                    if (!CategoryExists(category.CategoryId))
                     {
                         return NotFound();
                     }
@@ -113,10 +129,10 @@ namespace Guni_Kitchen.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(productCategory);
+            return View(category);
         }
 
-        // GET: ProductCategories/Delete/5
+        // GET: Manage/Categories/Delete/5
         public async Task<IActionResult> Delete(short? id)
         {
             if (id == null)
@@ -124,28 +140,28 @@ namespace Guni_Kitchen.Controllers
                 return NotFound();
             }
 
-            var productCategory = await _context.Category
+            var category = await _context.Category
                 .FirstOrDefaultAsync(m => m.CategoryId == id);
-            if (productCategory == null)
+            if (category == null)
             {
                 return NotFound();
             }
 
-            return View(productCategory);
+            return View(category);
         }
 
-        // POST: ProductCategories/Delete/5
+        // POST: Manage/Categories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(short id)
         {
-            var productCategory = await _context.Category.FindAsync(id);
-            _context.Category.Remove(productCategory);
+            var category = await _context.Category.FindAsync(id);
+            _context.Category.Remove(category);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductCategoryExists(short id)
+        private bool CategoryExists(short id)
         {
             return _context.Category.Any(e => e.CategoryId == id);
         }
