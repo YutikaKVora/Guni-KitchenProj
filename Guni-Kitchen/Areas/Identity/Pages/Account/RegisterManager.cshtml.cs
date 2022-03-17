@@ -19,16 +19,17 @@ using Microsoft.Extensions.Hosting;
 
 namespace Guni_Kitchen.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
-    public class RegisterModel : PageModel
+    [Authorize(Roles = "Administrator")]
+    public class RegisterManagerModel : PageModel
     {
+        private const string StandardPASSWORD = "Password@123!";
         private readonly SignInManager<MyIdentityUser> _signInManager;
         private readonly UserManager<MyIdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly IHostEnvironment _hostEnvironment;
 
-        public RegisterModel(
+        public RegisterManagerModel(
             UserManager<MyIdentityUser> userManager,
             SignInManager<MyIdentityUser> signInManager,
             ILogger<RegisterModel> logger,
@@ -56,16 +57,16 @@ namespace Guni_Kitchen.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-            [DataType(DataType.Password)]
-            [Display(Name = "Password")]
-            public string Password { get; set; }
+            //[Required]
+            //[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            //[DataType(DataType.Password)]
+            //[Display(Name = "Password")]
+            //public string Password { get; set; }
 
-            [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-            public string ConfirmPassword { get; set; }
+            //[DataType(DataType.Password)]
+            //[Display(Name = "Confirm password")]
+            //[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            //public string ConfirmPassword { get; set; }
 
             [Display(Name = "Display Name")]
             [Required(ErrorMessage = "{0} cannot be empty.")]
@@ -78,9 +79,9 @@ namespace Guni_Kitchen.Areas.Identity.Pages.Account
             [PersonalData]
             public DateTime DateOfBirth { get; set; }
 
-            [Display(Name = "Is Admin User?")]
-            [Required]
-            public bool IsAdminUser { get; set; } = false;
+            //[Display(Name = "Is Admin User?")]
+            //[Required]
+            //public bool IsAdminUser { get; set; } = false;
 
 
             [Display(Name = "Mobile Number")]
@@ -112,18 +113,19 @@ namespace Guni_Kitchen.Areas.Identity.Pages.Account
                     Email = Input.Email,
                     DisplayName = Input.DisplayName,
                     DateOfBirth = Input.DateOfBirth,
-                    IsAdminUser = Input.IsAdminUser,
+                    IsAdminUser = true,
                     PhoneNo = Input.PhoneNo,
                     Gender = Input.Gender
                 };
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                var result = await _userManager.CreateAsync(user, StandardPASSWORD);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
                     await _userManager.AddToRolesAsync(user, new string[] {
-                        MyIdentityRoleNames.Customer.ToString()
+                        MyIdentityRoleNames.Manager.ToString()
                     });
+
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

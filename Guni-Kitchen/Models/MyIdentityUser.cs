@@ -28,7 +28,6 @@ namespace Guni_Kitchen.Models
 
 
         [Display(Name = "Mobile Number")]
-        [Required(ErrorMessage = "Please provide a phone number")]
         [DataType(DataType.PhoneNumber)]
         [RegularExpression(@"^[6789]\d{9}$",
                    ErrorMessage = "Entered phone format is not valid.")]

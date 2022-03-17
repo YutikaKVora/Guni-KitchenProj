@@ -1,8 +1,9 @@
 ﻿@page
+@using Guni_Kitchen.Areas.Identity.Pages.Account
 @using Guni_Kitchen.Models.Enums
-@model RegisterModel
+@model RegisterManagerModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Register Manager";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -18,7 +19,7 @@
                 <input asp-for="Input.Email" class="form-control" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="Input.Password"></label>
                 <input asp-for="Input.Password" class="form-control" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
@@ -27,7 +28,7 @@
                 <label asp-for="Input.ConfirmPassword"></label>
                 <input asp-for="Input.ConfirmPassword" class="form-control" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
+            </div>*@
             <hr />
             <div class="form-group">
                 <label asp-for="Input.DisplayName"></label>
@@ -75,7 +76,7 @@
                 </div>
             </div> *@
 
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary">Register Manager</button>
         </form>
     </div>
     <div class="col-md-6 col-md-offset-2">

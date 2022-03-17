@@ -1,6 +1,7 @@
 using Guni_Kitchen.Data;
 using Guni_Kitchen.Models;
 using Guni_Kitchen.Services;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,7 +91,8 @@ namespace Guni_Kitchen
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<MyIdentityUser> userManager,
+            RoleManager<MyIdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -120,6 +123,8 @@ namespace Guni_Kitchen
                 endpoints.MapRazorPages();
             });
 
+            ApplicationDbContextSeed.SeedIdentityRolesAsync(roleManager).Wait();
+            ApplicationDbContextSeed.SeedIdentityUserAsync(userManager).Wait();
         }
     }
 }

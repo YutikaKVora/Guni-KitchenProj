@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Guni_Kitchen.Data;
 using Guni_Kitchen.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Guni_Kitchen.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class ProductCategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;

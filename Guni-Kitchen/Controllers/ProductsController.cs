@@ -13,9 +13,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Guni_Kitchen.Controllers
 {
+    [Authorize(Roles = "Administrator,Manager")]
     public class ProductsController : Controller
     {
         private const string BlobContainerNAME = "productimages";
